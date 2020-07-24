@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 var mysql = require("mysql");
 
-// set up connection to mysql database
+// set up connection to mysql database.
 const connection = mysql.createConnection({
   host: "SG-HRApplicationDB-2789-master.servers.mongodirector.com",
   user: "JustinBresee",
