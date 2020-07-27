@@ -15,13 +15,8 @@ connection.on("connect", () => console.log("conneced to database"));
 
 /* GET home page. */
 router.get("/", function (req, res) {
-  connection.query(
-    `select count(*) from TeamMembers;`,
-    function (error, results, fields) {
-      if (error) throw error;
-      res.json(results);
-    }
-  );
+  var list = ["item1", "item2", "item3"];
+  res.json(list);
 });
 
 // INSERT INTO table_name (column1, column2, column3, ...)
