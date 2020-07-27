@@ -181,7 +181,7 @@ router.post("/recruiting-metrics/add", (req, res) => {
   });
 });
 
-// GET - overall retention metrics.
+// GET - overall retention metrics
 router.get("/retention-metrics", (req, res ) => {
   if (!req.query.year) res.sendStatus(404);
   const {year, department, manager} = req.query;
