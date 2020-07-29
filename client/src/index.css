@@ -1,3 +1,11 @@
+:root {
+  --color-primary: #444;
+  --color-secondary: #BEBEF1;
+  --color-blue: #28536B;
+  --color-maroon: #A2666F;
+  --color-red: #F45866;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -10,4 +18,18 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* This selector targets the content section of the page */
+#root > div {
+  width: 85%;
+  margin-inline-start: auto;
+  padding: 12px;
+}
+
+@media only screen and (max-width: 1350px) {
+  #root > div {
+    margin-inline-start: 200px;
+    width: calc(100% - 200px);
+  }
 }

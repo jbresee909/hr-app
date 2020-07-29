@@ -1,0 +1,28 @@
+.RetentionMetric {
+  color: white;
+}
+
+.RetentionMetric select {
+    padding: 5px 12px;
+    margin-inline-end: 5px;
+    color: white;
+    border-style: none;
+}
+
+.RetentionMetric .filters {
+    display: flex;
+    flex-direction: row;
+}
+
+.RetentionMetric .content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.RetentionMetric .content h1 {
+  margin-bottom: 0;
+  font-size: 65px;
+}

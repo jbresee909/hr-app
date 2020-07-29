@@ -1,0 +1,39 @@
+.team-member-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    grid-gap: 12px;
+    padding: 12px;
+    background-color: white;  
+}
+
+.team-member-card > img {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+}
+
+.team-member-card > div.info {
+   margin-inline-start: 20px;
+}
+
+.team-member-card > div.info h2 {
+    margin-bottom: 0;
+ }
+
+.team-member-card > div.info p {
+    margin-bottom: 0;
+ }
+
+.team-member-card > .date-and-edit {
+  margin-inline-start: auto;
+  align-self: baseline;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.team-member-card > .date-and-edit img {
+   align-self: flex-end;
+   margin-top: 30px;
+}

@@ -1,0 +1,13 @@
+.metric {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 5px;
+    color: white;
+    height: 200px;
+}
+
+.metric h1 {
+    font-size: 65px;
+}

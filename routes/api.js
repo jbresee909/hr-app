@@ -43,6 +43,18 @@ router.get("/team-members", function (req, res) {
   });
 });
 
+// GET - all team managers
+router.get("/team-members/managers", function (req, res) {
+  connection.query(`SELECT Name, Member_ID, Department, Position, DATE_FORMAT(Start_Date, "%b %Y") as Start_Date FROM TeamMembers WHERE (Position = "Department Manager" OR Position = "CEO") AND  Employment_Status="Employed"`, function (
+    error,
+    results,
+    fields
+  ) {
+    if (error) throw error;
+    res.json(results);
+  });
+});
+
 // POST - Add a new team member
 router.post("/team-members/add", function (req, res) {
   const {
@@ -176,13 +188,40 @@ router.post("/recruiting-metrics/add", (req, res) => {
   });
 });
 
+// GET - number of new employees hired in last week
+router.get("/recruiting-metrics/past-week-hires", (req, res) => {
+  connection.query(`SELECT COUNT(*) as "total_hires" FROM TeamMembers WHERE Start_Date >= NOW() - INTERVAL 7 DAY;`, 
+  (error, results) => {
+    if (error) throw error;
+    res.json(results);
+  });
+});
+
+// GET - number employees terminated this year
+router.get("/recruiting-metrics/past-year-terminated", (req, res) => {
+  connection.query(`SELECT COUNT(*) as "total_terminated" FROM TeamMembers WHERE YEAR(End_Date) >= YEAR(NOW());`, 
+  (error, results) => {
+    if (error) throw error;
+    res.json(results);
+  });
+});
+
+// GET - average hire cost for this current year
+router.get("/recruiting-metrics/average-hire-cost", (req, res) => {
+  connection.query(`SELECT ROUND(AVG(rm.Hire_Cost), 2) as "hire_cost" FROM RecruitingMetrics as rm JOIN TeamMembers as tm ON rm.Member_ID = tm.Member_ID WHERE YEAR(tm.Start_Date) = YEAR(CURDATE());`, 
+  (error, results) => {
+    if (error) throw error;
+    res.json(results);
+  });
+});
+
 // GET - overall retention metrics
 router.get("/retention-metrics", (req, res ) => {
   if (!req.query.year) res.sendStatus(404);
-  const {year, department, manager} = req.query;
-  const totalEndYear = `SELECT COUNT(Member_ID) from TeamMembers WHERE (Start_Date <= "${year}-01-01" AND Member_ID IN (SELECT Member_ID FROM TeamMembers WHERE End_Date > "${year}-12-31" OR End_Date IS NULL)) ${department ? 'AND Department = "' + department + '"' : ""} ${manager ? 'AND Manager = "' + manager + '"' : ""}`;
-  const totalBeginningYear = `SELECT COUNT(Member_ID) from TeamMembers WHERE (Start_Date <= "${year}-01-01" AND (End_Date > "${year}-01-01" OR End_Date IS NULL)) ${department ? 'AND Department = "' + department + '"' : ""} ${manager ? 'AND Manager = "' + manager + '"' : ""}`;
-  connection.query(`SELECT (${totalEndYear}) / (${totalBeginningYear}) as "retentionRate";`, 
+  const { year, department } = req.query;
+  const totalEndYear = `SELECT COUNT(Member_ID) from TeamMembers WHERE (Start_Date <= "${year}-01-01" AND Member_ID IN (SELECT Member_ID FROM TeamMembers WHERE End_Date > "${year}-12-31" OR End_Date IS NULL)) ${department ? 'AND Department = "' + department + '"' : ""}`;
+  const totalBeginningYear = `SELECT COUNT(Member_ID) from TeamMembers WHERE (Start_Date <= "${year}-01-01" AND (End_Date > "${year}-01-01" OR End_Date IS NULL)) ${department ? 'AND Department = "' + department + '"' : ""}`;
+  connection.query(`SELECT ROUND((${totalEndYear}) / (${totalBeginningYear}) * 100, 2) as "retentionRate";`, 
   (error,results) => {
     if (error) throw error;
     res.json(results);
