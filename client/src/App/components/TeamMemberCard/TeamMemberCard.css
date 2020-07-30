@@ -5,6 +5,7 @@
     grid-gap: 12px;
     padding: 12px;
     background-color: white;  
+    border-radius: 5px;
 }
 
 .team-member-card > img {

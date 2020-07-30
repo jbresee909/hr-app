@@ -2,11 +2,6 @@ import React from "react";
 import "./Metric.css";
 
 const Metric = (props) => {
-//    const props = {
-//        metric: "23%",
-//        title: "Title for Metric",
-//        bgColor: "--color-blue"
-//    }
 
    return (
        <div className="metric" style={{backgroundColor: "var(" + props.bgColor + ")"}}>

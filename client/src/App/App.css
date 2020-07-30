@@ -1,6 +1,7 @@
 .home {
     display: grid;
     grid-template-columns: auto auto auto;
+    grid-template-rows: auto auto auto;
     grid-gap: 12px;
 }
 
@@ -9,4 +10,88 @@
     grid-template-columns: auto;
     grid-row-gap: 12px;
     grid-column: 1 / span 2;
+    grid-row: 2 / span 2;
+    background-color: var(--color-primary);
+    padding: 12px;
+    border-radius: 5px;
+}
+
+.home .management h1 {
+    margin-bottom: 0;
+    margin-top: 12px;
+    color: white;
+}
+
+.total-terminated {
+    padding: 12px;
+    background-color: var(--color-blue);
+    border-radius: 5px;
+}
+
+.total-terminated h4 {
+    margin-bottom: 12px;
+    margin-top: 12px;
+    color: white;
+}
+
+.team {
+    display: flex;
+    align-items: baseline;
+}
+
+.team .team-members {
+    display: grid;
+    grid-row-gap: 12px;
+    width: 75%;
+}
+
+.team .team-filters {
+    background-color: white;
+    width: 24%;
+    margin-inline-start: 12px;
+    border-radius: 5px;
+    padding: 12px;
+    height: 200px;
+}
+
+.team select {
+    width: 100%;
+    height: 30px;
+    border-color: #ccc;
+    border-radius: 3px;
+}
+
+.retention-metrics, 
+.recruiting-metrics {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-gap: 12px;
+}
+
+.activity-logs {
+    display: grid;
+    grid-gap: 12px;
+    width: 75%;
+}
+
+.activity-log-filters {
+    padding: 12px;
+    background-color: white;
+    border-radius: 5px;
+    align-self: baseline;
+    width: 24%;
+    margin-left: 1%
+}
+
+.activity-log-filters select {
+    width: 100%;
+    height: 30px;
+    border-color: #ccc;
+    border-radius: 3px;
+}
+
+.permissions {
+    display: grid;
+    grid-template-columns: 75%;
+    grid-gap: 12px;
 }

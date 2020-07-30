@@ -2,12 +2,7 @@ import React, {useState, useEffect, useCallback} from "react";
 import "./RetentionMetric.css";
 import axios from "axios";
 
-const RetentionMetric = () => {
-    const props = {
-        bgColor: "--color-red",
-        year: "2018",
-        department: "Accounting"
-    };
+const RetentionMetric = (props) => {
 
     const [filters, setFilters] = useState([])
     const [metric, setMetric] = useState("");
@@ -83,9 +78,8 @@ const RetentionMetric = () => {
           </div>
           <div className="content" style={{backgroundColor: "var(" + props.bgColor + ")"}}>
             <h1>{metric + "%"}</h1>
-            <h4>Retention</h4>
+            <h4>{selectedDepartment + " Retention In " + selectedYear}</h4>
           </div>
-          <h5 style={{color: "#333"}}>{selectedDepartment + " Retention In " + selectedYear}</h5>
         </div>
     )
 }

@@ -2,25 +2,15 @@ import React from "react";
 import { Chart } from 'react-charts';
 import "./Graph.css";
 
-const Graph = () => {
-    const props = {
-        chartData: "",
-        chartWidth: 400,
-        chartHeight: 300,
-        chartType: "bubble"
-    }
+const Graph = (props) => {
 
     const data = React.useMemo(
         () => [
             {
-            label: 'Series 1',
-            data: [[1, 4], [2,3], [3,2]]
-            },
-            {
-            label: 'Series 2',
-            data: [[0, 3], [1, 1], [2, 5]]
+            label: props.label,
+            data: props.data
             }
-        ],[]
+        ],[props.data, props.label]
     )
 
     const series = React.useMemo(
@@ -31,9 +21,9 @@ const Graph = () => {
     
     const axes = React.useMemo(
         () => [
-            { primary: true, type: 'linear', position: 'bottom' },
-            { type: 'linear', position: 'left' }
-        ], []
+            { primary: true, type: props.xAxisType, position: 'bottom' },
+            { type: props.yAxisType, position: 'left' }
+        ], [props.xAxisType, props.yAxisType]
     )
     
     const lineChart = (
@@ -41,8 +31,8 @@ const Graph = () => {
     // space of its parent element automatically
     <div
         style={{
-            width: props.chartWidth + 'px',
-            height: props.chartHeight + 'px',
+            width: '90%',
+            height: '90%',
             backgroundColor: "white"
         }}
     >
@@ -53,15 +43,17 @@ const Graph = () => {
     return (
     <div 
         style={{
-            width: (props.chartWidth + 100) + 'px',
-            height: (props.chartHeight + 100) + 'px',
+            width: '100%',
+            height: '300px',
             backgroundColor: 'white',
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: "5px"
         }}
         >
+        <h4 style={{marginTop: '8px'}}>{props.label}</h4>
         {lineChart}
     </div>
     )

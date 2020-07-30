@@ -4,7 +4,8 @@
     align-items: center;
     grid-gap: 12px;
     padding: 12px;
-    background-color: white;  
+    background-color: white;
+    border-radius: 5px;  
 }
 
 .activity-log .profile {
