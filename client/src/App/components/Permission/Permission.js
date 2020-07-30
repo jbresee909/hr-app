@@ -10,7 +10,7 @@ const Permission = (props) => {
                 <p>{props.name}</p>
             </div>
             <div className="info">
-                <h2>{props.permission}</h2>
+                <h2>{"Permissions Level - " + props.permission}</h2>
             </div>
         </div>
     )

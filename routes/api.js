@@ -2,8 +2,6 @@ var express = require("express");
 var router = express.Router();
 var mysql = require("mysql");
 
-console.log(process.env)
-
 // set up connection to mysql database.
 const connection = mysql.createConnection({
   host: process.env.HOST,
