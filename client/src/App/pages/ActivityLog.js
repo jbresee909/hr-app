@@ -34,6 +34,7 @@ const ActivityLog = () => {
                 changedTo={activity.Changed_To}
                 activityDate={activity.Activity_Date}
                 name={activity.Name}
+                photo={activity.Team_Member_Photo}
                 />
             ))}
             </div>

@@ -18,6 +18,7 @@ const Permissions = () => {
                 <Permission
                 name={permission.Name}
                 permission={permission.Permissions}
+                photo={permission.Team_Member_Photo}
                 />
             ))}
         </div>

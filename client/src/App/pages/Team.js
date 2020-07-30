@@ -27,6 +27,12 @@ const Team = () => {
     const [photo, setPhoto] = useState("");
     const [favoriteColor, setFavoriteColor] = useState("");
     const [permissions, setPermissions] = useState("");
+
+    // new recruiting metrics
+    const [hireCost, setHireCost] = useState("");
+    const [hireExperience, setHireExperience] = useState("");
+    const [hireSource, setHireSource] = useState("");
+    const [daysToHire, setDaysToHire] = useState("");
      
     // handle opening and closing modal for creating a new team member
     const handleClose = () => setShow(false);
@@ -80,8 +86,28 @@ const Team = () => {
             permissions: permissions
         }
       })
-      .then(() => alert("New Member Created"))
+      .then((res) => {
+        alert("New Member Created")
+        handleCreateRecruitingMetric(res.data.member_ID);
+    })
       .catch(e => alert("Invalid Entry, Try Again"));
+    
+    const handleCreateRecruitingMetric = (member_ID) => {
+        axios({
+            method: 'post',
+            url: 'api/recruiting-metrics/add',
+            headers: {}, 
+            data: {
+                member_ID: member_ID,
+                hireCost: hireCost,
+                hireExperience: hireExperience,
+                hireSource: hireSource,
+                daysToHire: daysToHire
+            }
+        })
+        .then(() => window.location.reload(false))
+        .catch(e => console.error(e));
+    }
 
     return (
         <div className="team">
@@ -186,6 +212,30 @@ const Team = () => {
                         <InputGroup.Text id="basic-addon1">Permissions</InputGroup.Text>
                         </InputGroup.Prepend>
                         <FormControl onChange={(e) => setPermissions(e.target.value)}/>
+                    </InputGroup>
+                    <InputGroup className="mb-3">
+                        <InputGroup.Prepend>
+                        <InputGroup.Text id="basic-addon1">Hire Cost</InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <FormControl onChange={(e) => setHireCost(e.target.value)}/>
+                    </InputGroup>
+                    <InputGroup className="mb-3">
+                        <InputGroup.Prepend>
+                        <InputGroup.Text id="basic-addon1">Hire Experience</InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <FormControl onChange={(e) => setHireExperience(e.target.value)}/>
+                    </InputGroup>
+                    <InputGroup className="mb-3">
+                        <InputGroup.Prepend>
+                        <InputGroup.Text id="basic-addon1">Hire Source</InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <FormControl onChange={(e) => setHireSource(e.target.value)}/>
+                    </InputGroup>
+                    <InputGroup className="mb-3">
+                        <InputGroup.Prepend>
+                        <InputGroup.Text id="basic-addon1">Days to Hire</InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <FormControl onChange={(e) => setDaysToHire(e.target.value)}/>
                     </InputGroup>
                 </Modal.Body>
                 <Modal.Footer>

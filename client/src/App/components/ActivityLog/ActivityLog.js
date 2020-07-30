@@ -5,7 +5,7 @@ const ActivityLog = (props) => {
     return (
         <div className="activity-log" activitytype={props.activityType}>
             <div className="profile">
-                <img src="https://res.cloudinary.com/justin-bresee/image/upload/v1595695260/HR-Application/images_klnenp.png" alt="profile-pic"/>
+                <img src={props.photo} alt="profile-pic"/>
                 <p>{props.name}</p>
             </div>
             <div className="info">

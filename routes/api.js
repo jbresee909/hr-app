@@ -15,21 +15,15 @@ connection.on("connect", () => console.log("conneced to database"));
 
 /* GET home page. */
 router.get("/", function (req, res) {
-  var list = ["item1", "item2", "item3"];
-  res.json(list);
+  connection.query(`update TeamMembers set Permissions = "Youngling" where Permissions = "Level 1";`, function (
+    error,
+    results,
+    fields
+  ) {
+    if (error) throw error;
+    res.json(results);
+  });
 });
-
-// INSERT INTO table_name (column1, column2, column3, ...)
-// VALUES (value1, value2, value3, ...);
-
-// query for inserting a new team member
-// `insert into TeamMembers (Name, Address, Email, Preferred_Phone, Position, Department, Start_Date, End_Date, Employment_Status, Shift, Manager, Team_Member_Photo, Favorite_Color) values("Justin Bresee","Roy, UT","justinbresee@gmail.com","817-555-5555","IT Manager","IT",null,null,"employed","All Day","Tom",null,"Blue")`
-
-// query to update a row
-// `update TeamMembers set Start_Date = "2015-03-03" where Name = "Justin Bresee"`
-
-// query to delete a row
-// DELETE FROM TeamMembers WHERE Name = "Justin Bresee";
 
 // GET - all team members
 router.get("/team-members", function (req, res) {
@@ -98,7 +92,7 @@ router.post("/team-members/add", function (req, res) {
         `INSERT INTO TeamMembers (Name, Address, Email, Preferred_Phone, Position, Department, Start_Date, End_Date, Employment_Status, Shift, Manager, Team_Member_Photo, Favorite_Color, Permissions, Member_ID) VALUES (${name ? '"' + name + '"' : null},${address ? '"' + address + '"' : null},${email ? '"' + email + '"' : null},${preferredPhone ? '"' + preferredPhone + '"' : null},${position ? '"' + position + '"' : null},${department ? '"' + department + '"' : null},${startDate ? '"' + startDate + '"' : null},${endDate ? '"' + endDate + '"' : null},${employmentStatus ? '"' + employmentStatus + '"' : null},${shift ? '"' + shift + '"' : null},${manager ? '"' + manager + '"' : null},${photo ? '"' + photo + '"' : null},${favoriteColor ? '"' + favoriteColor + '"' : null}, ${permissions ? '"' + permissions + '"' : null}, ${member_ID})`,
         function (error, results) {
           if (error) throw error;
-          res.json(results);
+          res.json({results: results,member_ID: member_ID});
         }
       );
     }
@@ -149,7 +143,7 @@ router.delete("/team-members/remove", function (req, res) {
 
 // GET - all activity logs
 router.get("/activity-log", function (req, res) {
-  connection.query(`SELECT Name, Activity_Type, Changed_From, Changed_To ,DATE_FORMAT(Activity_Date, "%b %Y") as Activity_Date FROM ActivityLog ORDER BY Activity_Date DESC;`, 
+  connection.query(`SELECT tm.Name, al.Activity_Type, al.Changed_From, al.Changed_To, DATE_FORMAT(al.Activity_Date, "%b %Y") as "Activity_Date", tm.Team_Member_Photo FROM ActivityLog al JOIN TeamMembers tm ON al.Member_ID = tm.Member_ID ORDER BY al.Activity_Date DESC;`, 
   (error, results) => {
     if (error) throw error;
     res.json(results);
@@ -220,7 +214,7 @@ router.post("/recruiting-metrics/add", (req, res) => {
 
 // GET - number of new employees hired in last week
 router.get("/recruiting-metrics/past-week-hires", (req, res) => {
-  connection.query(`SELECT COUNT(*) as "total_hires" FROM TeamMembers WHERE Start_Date >= NOW() - INTERVAL 7 DAY;`, 
+  connection.query(`SELECT COUNT(*) as "total_hires" FROM TeamMembers WHERE Start_Date >= (ADDDATE(CURDATE(), -31));`, 
   (error, results) => {
     if (error) throw error;
     res.json(results);
@@ -269,7 +263,7 @@ router.get("/retention-metrics", (req, res ) => {
 
 // GET - team member permissions
 router.get("/team-members/permissions", (req, res ) => {
-  connection.query(`select Name, Member_ID, Permissions from TeamMembers ORDER BY Permissions DESC`,
+  connection.query(`select Name, Member_ID, Permissions, Team_Member_Photo from TeamMembers ORDER BY Permissions DESC`,
   (error,results) => {
     if (error) throw error;
     res.json(results);

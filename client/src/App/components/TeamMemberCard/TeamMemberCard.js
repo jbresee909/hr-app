@@ -43,7 +43,60 @@ const TeamMemberCard = (props) => {
   .then(() => alert("Team Member Deleted"))
   .catch((e) => console.error(e));
 
-  const saveTeamMemberChanges = (member_ID) => axios({
+  const handleCreateActivityLogs = () => {
+    if(position !== "") {
+      axios({
+        method: 'post',
+        url: 'api/activity-log/add',
+        headers: {}, 
+        data: {
+            member_ID: props.member_ID,
+            name: props.name,
+            activityDate: getCurrentDate(),
+            activityType: "Position",
+            changedFrom: props.position,
+            changedTo: position
+        }
+      })
+      .then(() => window.location.reload(false))
+      .catch(e => console.error(e));
+    }
+    if(manager !== "") {
+      axios({
+        method: 'post',
+        url: 'api/activity-log/add',
+        headers: {}, 
+        data: {
+            member_ID: props.member_ID,
+            name: props.name,
+            activityDate: getCurrentDate(),
+            activityType: "Manager",
+            changedFrom: props.manager,
+            changedTo: manager
+        }
+      })
+      .then(() => window.location.reload(false))
+      .catch(e => console.error(e));
+    }
+    if(permissions !== "") {
+      axios({
+        method: 'post',
+        url: 'api/activity-log/add',
+        headers: {}, 
+        data: {
+            member_ID: props.member_ID,
+            name: props.name,
+            activityDate: getCurrentDate(),
+            activityType: "Permissions",
+            changedFrom: props.permissions,
+            changedTo: permissions
+        }
+      })
+      .catch(e => console.error(e));
+    }
+  }
+
+  const handleSaveChanges = () => axios({
     method: 'post',
       url: 'api/team-members/edit',
       headers: {}, 
@@ -60,14 +113,17 @@ const TeamMemberCard = (props) => {
         photo: photo,
         favoriteColor: favoriteColor,
         permissions: permissions,
-        member_ID: member_ID
+        member_ID: props.member_ID
       }    
-  }).then(() => alert("Changes Saved"))
+  }).then(() => {
+    alert("Changes Saved")
+    window.location.reload(false)
+  })
   .catch((e) => console.error(e));
 
     return (
       <div className="team-member-card" memberName={props.name} department={props.department}>
-        <img src="https://res.cloudinary.com/justin-bresee/image/upload/v1595695260/HR-Application/images_klnenp.png" alt="profile-pic"/>
+        <img src={props.photo} alt="profile-pic"/>
         <div className="info">
             {props.employmentStatus === "employed" ? <Badge variant="success">Employed</Badge> : <Badge variant="danger">Terminated</Badge>}
             <h2>{props.name}</h2>
@@ -182,9 +238,9 @@ const TeamMemberCard = (props) => {
               Close
             </Button>
             <Button variant="primary" onClick={() => {
-              saveTeamMemberChanges(props.member_ID)
+              handleSaveChanges()
+              handleCreateActivityLogs()
               handleClose()
-              window.location.reload(false)
               }}>
               Save Changes
             </Button>
