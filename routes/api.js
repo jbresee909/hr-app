@@ -33,7 +33,7 @@ router.get("/", function (req, res) {
 
 // GET - all team members
 router.get("/team-members", function (req, res) {
-  connection.query(`select * from TeamMembers`, function (
+  connection.query(`SELECT Name, Address, Email, Member_ID, Preferred_Phone,Department, Position, Employment_Status, DATE_FORMAT(Start_Date, "%b %Y") as Start_Date, DATE_FORMAT(End_Date, "%b %Y") as End_Date, Shift, Manager, Team_Member_Photo, Favorite_Color, Permissions FROM TeamMembers`, function (
     error,
     results,
     fields
@@ -45,7 +45,19 @@ router.get("/team-members", function (req, res) {
 
 // GET - all team managers
 router.get("/team-members/managers", function (req, res) {
-  connection.query(`SELECT Name, Member_ID, Department, Position, DATE_FORMAT(Start_Date, "%b %Y") as Start_Date FROM TeamMembers WHERE (Position = "Department Manager" OR Position = "CEO") AND  Employment_Status="Employed"`, function (
+  connection.query(`SELECT Name, Address, Email, Preferred_Phone, Member_ID, Department, Position, Employment_Status, DATE_FORMAT(Start_Date, "%b %Y") as Start_Date, DATE_FORMAT(End_Date, "%b %Y") as End_Date,Shift, Manager, Team_Member_Photo, Favorite_Color, Permissions FROM TeamMembers WHERE (Position = "Department Manager" OR Position = "CEO") AND  Employment_Status="Employed"`, function (
+    error,
+    results,
+    fields
+  ) {
+    if (error) throw error;
+    res.json(results);
+  });
+});
+
+// GET - all team managers
+router.get("/departments", function (req, res) {
+  connection.query(`SELECT Distinct Department FROM TeamMembers`, function (
     error,
     results,
     fields
@@ -137,7 +149,7 @@ router.delete("/team-members/remove", function (req, res) {
 
 // GET - all activity logs
 router.get("/activity-log", function (req, res) {
-  connection.query(`SELECT * FROM ActivityLog ORDER BY Activity_Date DESC;`, 
+  connection.query(`SELECT Name, Activity_Type, Changed_From, Changed_To ,DATE_FORMAT(Activity_Date, "%b %Y") as Activity_Date FROM ActivityLog ORDER BY Activity_Date DESC;`, 
   (error, results) => {
     if (error) throw error;
     res.json(results);
@@ -166,6 +178,24 @@ router.get("/recruiting-metrics", (req, res) => {
   if(!req.query.operation || !req.query.field) res.sendStatus(404);
   const {operation, field, year} = req.query;
   connection.query(`SELECT ${operation}(rm.${field}) as "metric" FROM RecruitingMetrics as rm JOIN TeamMembers as tm on tm.Member_ID = rm.Member_ID ${year ? `WHERE YEAR(tm.Start_Date) = "${year}"`: ""}`, 
+  (error, results) => {
+    if (error) throw error;
+    res.json(results);
+  });
+});
+
+// GET - Hire Experiences Grouped By Hire Experience
+router.get("/recruiting-metrics/hire-experiences", (req, res) => {
+  connection.query(`SELECT Hire_Experience, COUNT(Member_ID) as "count" FROM RecruitingMetrics GROUP BY Hire_Experience;`, 
+  (error, results) => {
+    if (error) throw error;
+    res.json(results);
+  });
+});
+
+// GET - Hire Source Grouped By Source
+router.get("/recruiting-metrics/hire-sources", (req, res) => {
+  connection.query(`SELECT Hire_Source, COUNT(Member_ID) as "count" FROM RecruitingMetrics GROUP BY Hire_Source;`, 
   (error, results) => {
     if (error) throw error;
     res.json(results);
@@ -206,6 +236,15 @@ router.get("/recruiting-metrics/past-year-terminated", (req, res) => {
   });
 });
 
+// GET - number employees terminated each year
+router.get("/recruiting-metrics/terminated_by_year", (req, res) => {
+  connection.query(`SELECT YEAR(End_Date) as "year",COUNT(Member_ID) as "total_terminated" FROM TeamMembers WHERE Employment_Status = "terminated" GROUP BY YEAR(End_Date)`, 
+  (error, results) => {
+    if (error) throw error;
+    res.json(results);
+  });
+});
+
 // GET - average hire cost for this current year
 router.get("/recruiting-metrics/average-hire-cost", (req, res) => {
   connection.query(`SELECT ROUND(AVG(rm.Hire_Cost), 2) as "hire_cost" FROM RecruitingMetrics as rm JOIN TeamMembers as tm ON rm.Member_ID = tm.Member_ID WHERE YEAR(tm.Start_Date) = YEAR(CURDATE());`, 
@@ -230,7 +269,7 @@ router.get("/retention-metrics", (req, res ) => {
 
 // GET - team member permissions
 router.get("/team-members/permissions", (req, res ) => {
-  connection.query(`select Name, Member_ID, Permissions from TeamMembers`,
+  connection.query(`select Name, Member_ID, Permissions from TeamMembers ORDER BY Permissions DESC`,
   (error,results) => {
     if (error) throw error;
     res.json(results);
