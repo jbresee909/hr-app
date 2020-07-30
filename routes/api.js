@@ -2,12 +2,14 @@ var express = require("express");
 var router = express.Router();
 var mysql = require("mysql");
 
+console.log(process.env)
+
 // set up connection to mysql database.
 const connection = mysql.createConnection({
-  host: "SG-HRApplicationDB-2789-master.servers.mongodirector.com",
-  user: "JustinBresee",
-  password: "37Rigger909!",
-  database: "HR-App",
+  host: process.env.HOST,
+  user: process.env.USERNAME,
+  password: process.env.PASSWORD,
+  database: process.env.DATABASE,
 });
 
 connection.connect();
